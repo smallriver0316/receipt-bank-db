@@ -1,2 +1,3 @@
 # receipt-bank-db
-Receipt DB and API
+
+Prototyping codes of Receipt Bank DB and API
