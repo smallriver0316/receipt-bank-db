@@ -10,4 +10,9 @@ module.exports = class Customer extends DynamoDB {
   constructor(client = docClient) {
     super(client);
   }
+
+  getRecord = async (params) => {
+    const ret = await this.get(params);
+    return ret;
+  }
 };

@@ -81,6 +81,9 @@ package:
     - "!README.md"
     - "!package.json"
     - "!package-lock.json"
+    - "!.eslintrc.json"
+    - "!.npmignore"
+    - "!config/**"
     - "!templates/**"
     - src/**
 
@@ -142,4 +145,4 @@ functions:
 # you can add CloudFormation resource templates here
 resources:
   # - ${file(./templates/iam.yml)}
-  # - ${file(./templates/dynamodb.yml)}
+  - ${file(./templates/dynamodb.yml)}

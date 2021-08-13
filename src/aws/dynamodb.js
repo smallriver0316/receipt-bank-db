@@ -5,7 +5,7 @@ module.exports = class DynamoDB {
     this.client = client;
   }
 
-  async get(params) {
+  get = async (params) => {
     console.log('[DynamoDB][get] start get record');
 
     return new Promise((resolve, reject) => {
@@ -21,7 +21,7 @@ module.exports = class DynamoDB {
     });
   }
 
-  async put(params) {
+  put = async (params) => {
     console.log('[DynamoDB][put] start put record');
 
     return new Promise((resolve, reject) => {
@@ -31,6 +31,22 @@ module.exports = class DynamoDB {
           reject(err);
         } else {
           console.log('[DynamoDB][put] Succeeded to put record');
+          resolve(data);
+        }
+      });
+    });
+  }
+
+  query = async (params) => {
+    console.log('[DynamoDB][query] start query records');
+
+    return new Promise((resolve, reject) => {
+      this.client.query(params, (err, data) => {
+        if (err) {
+          console.error('[DynamoDB][query][Error] Failed to query records');
+          reject(err);
+        } else {
+          console.log('[DynamoDB][query] Succeeded to query records');
           resolve(data);
         }
       });
