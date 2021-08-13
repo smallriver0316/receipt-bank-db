@@ -1,6 +1,7 @@
 {
     "env": {
         "browser": true,
+        "node": true,
         "commonjs": true,
         "es2021": true
     },
@@ -9,5 +10,11 @@
         "ecmaVersion": 12
     },
     "rules": {
+        "semi":"error",
+        "quotes": ["error", "single"],
+        "indent": ["error", 2],
+        "no-multi-spaces": ["error"],
+        "arrow-body-style": ["error", "as-needed"],
+        "max-len": ["error", { "code": 80, "ignoreComments": true }]
     }
 }
