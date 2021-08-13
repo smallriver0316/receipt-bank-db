@@ -8,4 +8,20 @@ module.exports = class Customer {
     this.createdAt = customer.createdAt;
     this.updatedAt = customer.updatedAt;
   }
+
+  get ID() {
+    return this.id;
+  }
+
+  get Name() {
+    return this.name;
+  }
+
+  toJson = () => ({
+    id: this.id,
+    name: this.name,
+    email: this.email,
+    createdAt: this.createdAt,
+    updatedAt: this.updatedAt
+  });
 };

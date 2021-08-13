@@ -1,6 +1,7 @@
 'use strict';
 const AWS = require('aws-sdk');
 const DynamoDB = require('../aws/dynamodb');
+const CustomerModel = require('../models/customer');
 
 AWS.config.update({ region: process.env.REGION });
 
@@ -11,8 +12,17 @@ module.exports = class Customer extends DynamoDB {
     super(client);
   }
 
-  getRecord = async (params) => {
-    const ret = await this.get(params);
-    return ret;
+  getItem = async (params) => {
+    console.log('[Controller][Customer][getItem] Start getItem');
+    try {
+      const ret = await this.get(params);
+      if (!ret.Item) {
+        throw new Error('[Controller][Customer][getItem] Item not found!');
+      }
+      const item = new CustomerModel(ret.Item);
+      return item.toJson();
+    } catch(err) {
+      return err;
+    }
   }
 };

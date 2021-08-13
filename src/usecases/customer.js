@@ -7,11 +7,13 @@ module.exports = class Customer {
     this.controller = controller;
   }
 
-  get = async (req, res, next) => {
-    console.log('[Usecase][get] Start get a customer');
+  getItem = async (req, res, next) => {
+    console.log('[Usecase][Customer][getItem] Start get a customer');
     try {
       if (!req.query || !req.query.id) {
-        throw new Error('[Usecase][get][Error] customer ID not found!');
+        throw new Error(
+          '[Usecase][Customer][getItem][Error] customer ID not found!'
+        );
       }
 
       const id = req.query.id;
@@ -23,7 +25,7 @@ module.exports = class Customer {
         }
       };
 
-      const ret = await this.controller.getRecord(params);
+      const ret = await this.controller.getItem(params);
       console.log(ret);
       res.status(200).send(JSON.stringify(ret));
     } catch (err) {
