@@ -12,17 +12,49 @@ module.exports = class Customer extends DynamoDB {
     super(client);
   }
 
-  getItem = async (params) => {
+  getItem = async (id) => {
     console.log('[Controller][Customer][getItem] Start getItem');
-    try {
-      const ret = await this.get(params);
-      if (!ret.Item) {
-        throw new Error('[Controller][Customer][getItem] Item not found!');
+    const params = {
+      TableName: 'ReceiptBankDBTable',
+      Key: {
+        ppk: 'customer',
+        psk: id
       }
-      const item = new CustomerModel(ret.Item);
-      return item.toJson();
-    } catch(err) {
-      return err;
+    };
+    const ret = await this.get(params);
+    if (!ret.Item) {
+      throw new Error('[Controller][Customer][getItem] Item not found!');
     }
+    const item = new CustomerModel(ret.Item);
+    return item.toJson();
+  }
+
+  putItem = async (data) => {
+    console.log('[Controller][Customer][getItem] Start putItem');
+    const params = {
+      TableName: 'ReceiptBankDBTable',
+      Item: {
+        ppk: 'customer',
+        psk: data.id,
+        ...data
+      }
+    };
+    const ret = await this.put(params);
+    return ret;
+  }
+
+  updateItem = async () => {}
+
+  deleteItem = async (id) => {
+    console.log('[Controller][Customer][getItem] Start deleteItem');
+    const params = {
+      TableName: 'ReceiptBankDBTable',
+      Key: {
+        ppk: 'customer',
+        psk: id
+      }
+    };
+    const ret = await this.delete(params);
+    return ret;
   }
 };

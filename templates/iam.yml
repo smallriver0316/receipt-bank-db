@@ -24,8 +24,8 @@ Resources:
                   - dynamodb:Get*
                   - dynamodb:Query
                   - dynamodb:Scan
-                  - dynamodb:Delete
-                  - dynamodb:Update
+                  - dynamodb:DeleteItem
+                  - dynamodb:UpdateItem
                   - dynamodb:PutItem
                 Resource:
                   - "Fn::Join":

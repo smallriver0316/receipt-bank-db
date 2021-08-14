@@ -52,4 +52,35 @@ module.exports = class DynamoDB {
       });
     });
   }
+
+  update = async (params) => {
+    console.log('[DynamoDB][update] start update record');
+    return new Promise((resolve, reject) => {
+      this.client.update(params, (err, data) => {
+        if (err) {
+          console.error('[DynamoDB][update][Error] Failed to update record');
+          reject(err);
+        } else {
+          console.log('[DynamoDB][update] Succeeded to update record');
+          resolve(data);
+        }
+      });
+    });
+  }
+
+  delete = async (params) => {
+    console.log('[DynamoDB][delete] start delete record');
+
+    return new Promise((resolve, reject) => {
+      this.client.delete(params, (err, data) => {
+        if (err) {
+          console.error('[DynamoDB][delete][Error] Failed to delete record');
+          reject(err);
+        } else {
+          console.log('[DynamoDB][delete] Succeeded to delete record');
+          resolve(data);
+        }
+      });
+    });
+  }
 };

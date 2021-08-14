@@ -39,8 +39,8 @@ provider:
             - "dynamodb:Get*"
             - "dynamodb:Query"
             - "dynamodb:Scan"
-            - "dynamodb:Delete"
-            - "dynamodb:Update"
+            - "dynamodb:DeleteItem"
+            - "dynamodb:UpdateItem"
             - "dynamodb:PutItem"
           Resource:
             {
@@ -101,6 +101,14 @@ functions:
       - http:
           path: v1/customer/
           method: get
+          cors: true
+      - http:
+          path: v1/customer/
+          method: post
+          cors: true
+      - http:
+          path: v1/customer/
+          method: delete
           cors: true
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
