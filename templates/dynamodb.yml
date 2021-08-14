@@ -1,0 +1,19 @@
+Resources:
+  ReceiptBankDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: "PAY_PER_REQUEST"
+      AttributeDefinitions:
+        - AttributeName: "ppk"
+          AttributeType: "S"
+        - AttributeName: "psk"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "ppk"
+          KeyType: "HASH"
+        - AttributeName: "psk"
+          KeyType: "RANGE"
+      TableName: "ReceiptBankDBTable"
+      Tags:
+        - Key: "AppName"
+          Value: "receipt-bank-db"
