@@ -23,7 +23,7 @@ module.exports = class Customer extends DynamoDB {
     };
     const ret = await this.get(params);
     if (!ret.Item) {
-      throw new Error('[Controller][Customer][getItem] Item not found!');
+      throw new Error('[Controller][Customer][getItem][Error] Item not found!');
     }
     const item = new CustomerModel(ret.Item);
     return item.toJson();
@@ -56,5 +56,34 @@ module.exports = class Customer extends DynamoDB {
     };
     const ret = await this.delete(params);
     return ret;
+  }
+
+  queryItems = async () => {
+    console.log('[Controller][Customer][queryItems] Start queryItems');
+    const params = {
+      TableName: 'ReceiptBankDBTable',
+      KeyConditionExpression: '#PartitionKeyName=:data',
+      ExpressionAttributeNames: {
+        '#PartitionKeyName': 'ppk'
+      },
+      ExpressionAttributeValues: {
+        ':data': 'customer'
+      }
+    };
+
+    const ret = await this.query(params);
+    console.log(ret);
+
+    if (!ret.Items || ret.Items.length == 0) {
+      throw new Error(
+        '[Controller][Customer][queryItems][Error] Items not found!'
+      );
+    }
+
+    const items = ret.Items.map(item => {
+      const customer = new CustomerModel(item);
+      return customer.toJson();
+    });
+    return items;
   }
 };

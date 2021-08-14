@@ -9,5 +9,6 @@ router.get('/', (req, res) => res.send('You succeed to access Receipt Bank!'));
 router.get('/customer', Customer.getItem);
 router.post('/customer', Customer.putItem);
 router.delete('/customer', Customer.deleteItem);
+router.get('/customer/list', Customer.queryItems);
 
 module.exports = router;

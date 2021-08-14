@@ -68,5 +68,14 @@ module.exports = class Customer {
     }
   }
 
-  queryItems = async () => {}
+  queryItems = async (req, res, next) => {
+    console.log('[Usecase][Customer][queryItems] Start query customers');
+    try {
+      const ret = await this.controller.queryItems();
+      console.log(ret);
+      res.status(200).send(JSON.stringify(ret));
+    } catch(err) {
+      next(err);
+    }
+  }
 };
