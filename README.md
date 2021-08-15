@@ -43,7 +43,7 @@ When try to request API, do as following.
 API endpoint comes from deployment result of API Gateway.
 
 ```bash
-curl -i -H "Content-Type: application/json" [API endpoint]
+curl -i -H "Content-Type: application/json" "[API endpoint]"
 ```
 
 Run linter.

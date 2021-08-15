@@ -1,64 +1,65 @@
 'use strict';
 const AWS = require('aws-sdk');
 const DynamoDB = require('../aws/dynamodb');
-const CustomerModel = require('../models/customer');
+const AuthorityModel = require('../models/authority');
 
 AWS.config.update({ region: process.env.REGION });
 const docClient = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
 
-const DATA_NAME = 'customer';
+const DATA_NAME = 'authority';
 
-module.exports = class Customer extends DynamoDB {
+module.exports = class Authority extends DynamoDB {
   constructor(client = docClient) {
     super(client);
   }
 
-  getItem = async (id) => {
-    console.log('[Controller][Customer][getItem] Start getItem');
+  getItem = async (appId, authorityId) => {
+    console.log('[Controller][Authority][getItem] Start getItem');
 
     const params = {
       TableName: process.env.TABLE_NAME,
       Key: {
         ppk: DATA_NAME,
-        psk: id
+        psk: `${appId}/${authorityId}`
       }
     };
 
     const ret = await this.get(params);
     if (!ret.Item) {
-      throw new Error('[Controller][Customer][getItem][Error] Item not found!');
+      throw new Error(
+        '[Controller][Authority][getItem][Error] Item not found!'
+      );
     }
 
-    const item = new CustomerModel(ret.Item);
+    const item = new AuthorityModel(ret.Item);
     return item.toJson();
   }
 
   putItem = async (data) => {
-    console.log('[Controller][Customer][getItem] Start putItem');
+    console.log('[Controller][Authority][putItem] Start putItem');
 
     const params = {
       TableName: process.env.TABLE_NAME,
       Item: {
         ppk: DATA_NAME,
-        psk: data.id,
+        psk: `${data.appId}/${data.id}`,
         ...data
       }
     };
 
     const ret = await this.put(params);
+    console.log(ret);
     return ret;
   }
 
-  updateItem = async () => {}
-
-  deleteItem = async (id) => {
-    console.log('[Controller][Customer][getItem] Start deleteItem');
+  deleteItem = async (appId, authorityId) => {
+    console.log('[Controller][Authority][deleteItem] Start deleteItem');
 
     const params = {
       TableName: process.env.TABLE_NAME,
       Key: {
         ppk: DATA_NAME,
-        psk: id
+        psk: `${appId}/${authorityId}`
       }
     };
 
@@ -66,32 +67,35 @@ module.exports = class Customer extends DynamoDB {
     return ret;
   }
 
-  queryItems = async () => {
-    console.log('[Controller][Customer][queryItems] Start queryItems');
+  queryItems = async (appId) => {
+    console.log('[Controller][Authority][queryItems] Start queryItems');
 
     const params = {
       TableName: process.env.TABLE_NAME,
-      KeyConditionExpression: '#PartitionKey=:data',
+      KeyConditionExpression:
+        '#PartitionKey=:data and begins_with(#SortKey, :id)',
       ExpressionAttributeNames: {
-        '#PartitionKey': 'ppk'
+        '#PartitionKey': 'ppk',
+        '#SortKey': 'psk'
       },
       ExpressionAttributeValues: {
-        ':data': DATA_NAME
+        ':data': DATA_NAME,
+        ':id': `${appId}/`
       }
     };
 
     const ret = await this.query(params);
     console.log(ret);
 
-    if (!ret.Items || ret.Items.length == 0) {
+    if (!ret.Items || ret.Items.length === 0) {
       throw new Error(
-        '[Controller][Customer][queryItems][Error] Items not found!'
+        '[Controller][Authority][queryItems][Error] Items not found!'
       );
     }
 
     const items = ret.Items.map(item => {
-      const customer = new CustomerModel(item);
-      return customer.toJson();
+      const product = new AuthorityModel(item);
+      return product.toJson();
     });
     return items;
   }
