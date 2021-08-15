@@ -13,14 +13,14 @@ module.exports = class Group extends DynamoDB {
     super(client);
   }
 
-  getItem = async (appId, planId, groupId) => {
+  getItem = async (planId, groupId) => {
     console.log('[Controller][Group][getItem] Start getItem');
 
     const params = {
       TableName: process.env.TABLE_NAME,
       Key: {
         ppk: DATA_NAME,
-        psk: `${appId}/${planId}/${groupId}`
+        psk: `${planId}/${groupId}`
       }
     };
 
@@ -42,7 +42,7 @@ module.exports = class Group extends DynamoDB {
       TableName: process.env.TABLE_NAME,
       Item: {
         ppk: DATA_NAME,
-        psk: `${data.appId}/${data.planId}/${data.id}`,
+        psk: `${data.planId}/${data.id}`,
         ...data
       }
     };
@@ -53,14 +53,14 @@ module.exports = class Group extends DynamoDB {
     return ret;
   }
 
-  deleteItem = async (appId, planId, groupId) => {
+  deleteItem = async (planId, groupId) => {
     console.log('[Controller][Group][deleteItem] Start deleteItem');
 
     const params = {
       TableName: process.env.TABLE_NAME,
       Key: {
         ppk: DATA_NAME,
-        psk: `${appId}/${planId}/${groupId}`
+        psk: `${planId}/${groupId}`
       }
     };
 
@@ -68,7 +68,7 @@ module.exports = class Group extends DynamoDB {
     return ret;
   }
 
-  queryItems = async (appId, planId) => {
+  queryItems = async (planId) => {
     console.log('[Controller][Group][queryItems] Start queryItems');
 
     const params = {
@@ -81,7 +81,7 @@ module.exports = class Group extends DynamoDB {
       },
       ExpressionAttributeValues: {
         ':data': DATA_NAME,
-        ':id': `${appId}/${planId}/`
+        ':id': `${planId}/`
       }
     };
 

@@ -17,6 +17,6 @@
         "indent": ["error", 2],
         "no-multi-spaces": ["error"],
         "arrow-body-style": ["error", "as-needed"],
-        "max-len": ["error", { "code": 80, "ignoreComments": true }]
+        "max-len": ["error", { "code": 90, "ignoreComments": true }]
     }
 }

@@ -11,10 +11,11 @@ module.exports = class Customer {
 
   getItem = async (req, res, next) => {
     console.log('[Usecase][Customer][getItem] Start get a customer');
+
     try {
       if (!req.query || !req.query.id) {
         throw new Error(
-          '[Usecase][Customer][getItem][Error] customer ID not found!'
+          '[Usecase][Customer][getItem][Error] Customer ID not found!'
         );
       }
       const ret = await this.controller.getItem(req.query.id);
@@ -28,13 +29,13 @@ module.exports = class Customer {
 
   putItem = async (req, res, next) => {
     console.log('[Usecase][Customer][putItem] Start put a customer');
+
     try {
       if (!req.body || !req.body.name || !req.body.email) {
         throw new Error(
           '[Usecase][Customer][putItem][Error] Request payload not found!'
         );
       }
-
       const now = moment().format('YYYY-MM-DDTHH:mm:ssZ');
       const data = {
         id: uuid.v4(),
@@ -45,7 +46,7 @@ module.exports = class Customer {
       };
       await this.controller.putItem(data);
       res.status(200).send(JSON.stringify(data));
-    } catch(err) {
+    } catch (err) {
       console.error(err.stack);
       next(err);
     }
@@ -53,16 +54,17 @@ module.exports = class Customer {
 
   deleteItem = async (req, res, next) => {
     console.log('[Usecase][Customer][deleteItem] Start delete a customer');
+
     try {
       if (!req.query || !req.query.id) {
         throw new Error(
-          '[Usecase][Customer][getItem][Error] customer ID not found!'
+          '[Usecase][Customer][getItem][Error] Customer ID not found!'
         );
       }
       const ret = await this.controller.deleteItem(req.query.id);
       console.log(ret);
       res.status(200).send(JSON.stringify(ret));
-    } catch(err) {
+    } catch (err) {
       console.error(err.stack);
       next(err);
     }
@@ -70,11 +72,13 @@ module.exports = class Customer {
 
   queryItems = async (req, res, next) => {
     console.log('[Usecase][Customer][queryItems] Start query customers');
+
     try {
       const ret = await this.controller.queryItems();
       console.log(ret);
       res.status(200).send(JSON.stringify(ret));
-    } catch(err) {
+    } catch (err) {
+      console.error(err.stack);
       next(err);
     }
   }
