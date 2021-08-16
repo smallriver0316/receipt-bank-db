@@ -72,8 +72,12 @@ module.exports = class Receipt extends DynamoDB {
     console.log('[Controller][Product][queryItems] Start queryItems');
 
     let prefix = appId;
-    if (productId !== '') prefix = `${prefix}/${productId}`;
-    if (userId !== '') prefix = `${prefix}/${userId}`;
+    if (productId !== '') {
+      prefix = `${prefix}/${productId}`;
+      if (userId !== '') {
+        prefix = `${prefix}/${userId}`;
+      }
+    }
 
     const params = {
       TableName: process.env.TABLE_NAME,
