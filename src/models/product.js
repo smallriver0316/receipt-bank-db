@@ -19,6 +19,10 @@ module.exports = class Product {
     return this.name;
   }
 
+  get Store() {
+    return this.store;
+  }
+
   toJson = () => ({
     appId: this.appId,
     id: this.id,

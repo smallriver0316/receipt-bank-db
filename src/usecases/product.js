@@ -87,7 +87,8 @@ module.exports = class Product {
           '[Usecase][Product][queryItems][Error] Required parameters not found!'
         );
       }
-      const ret = await this.controller.queryItems(req.query.appId);
+      const storeName = !req.query.store ? '' : req.query.store;
+      const ret = await this.controller.queryItems(req.query.appId, storeName);
       console.log(ret);
       res.status(200).send(JSON.stringify(ret));
     } catch (err) {

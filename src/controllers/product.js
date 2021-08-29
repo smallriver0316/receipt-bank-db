@@ -68,7 +68,7 @@ module.exports = class Product extends DynamoDB {
     return ret;
   }
 
-  queryItems = async (appId) => {
+  queryItems = async (appId, storeName='') => {
     console.log('[Controller][Product][queryItems] Start queryItems');
 
     const params = {
@@ -94,10 +94,16 @@ module.exports = class Product extends DynamoDB {
       );
     }
 
-    const items = ret.Items.map(item => {
+    let items = [];
+    ret.Items.forEach(item => {
       const product = new ProductModel(item);
-      return product.toJson();
+      if (storeName === '') {
+        items.push(product.toJson());
+      } else if (storeName === product.Store) {
+        items.push(product.toJson());
+      }
     });
+
     return items;
   }
 };
