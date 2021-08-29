@@ -6,6 +6,7 @@ module.exports = class Product {
     this.id = product.id;
     this.store = product.store;
     this.name = product.name;
+    this.authority = product.authority;
     this.createdAt = product.createdAt;
     this.updatedAt = product.updatedAt;
   }
@@ -23,6 +24,7 @@ module.exports = class Product {
     id: this.id,
     store: this.store,
     name: this.name,
+    authority: this.authority,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt
   });

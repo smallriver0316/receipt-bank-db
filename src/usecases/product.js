@@ -42,6 +42,10 @@ module.exports = class Product {
         id: uuid.v4(),
         store: req.body.store,
         name: req.body.name,
+        authority: {
+          id: '',
+          name: ''
+        },
         createdAt: now,
         updatedAt: now
       };
