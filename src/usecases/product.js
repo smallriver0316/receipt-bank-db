@@ -37,10 +37,12 @@ module.exports = class Product {
         );
       }
       const now = moment().format('YYYY-MM-DDTHH:mm:ssZ');
+      const storeProductId = !req.body.storeProductId ? '' : req.body.storeProductId;
       const data = {
         appId: req.body.appId,
         id: uuid.v4(),
         store: req.body.store,
+        storeProductId,
         name: req.body.name,
         authority: {
           id: '',
