@@ -30,7 +30,7 @@ module.exports = class CustomerApp {
     console.log('[Usecase][CustomerApp][putItem] Start put a customerApp');
 
     try {
-      if (!req.body || !req.body.customerId || !req.body.appId) {
+      if (!req.body || !req.body.customerId || !req.body.appId || !req.body.appName) {
         throw new Error(
           '[Usecase][CustomerApp][putItem][Error] Required parameters not found!'
         );
@@ -39,6 +39,7 @@ module.exports = class CustomerApp {
       const data = {
         customerId: req.body.customerId,
         appId: req.body.appId,
+        appName: req.body.appName,
         userRole: '',
         createdAt: now,
         updatedAt: now
