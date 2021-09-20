@@ -1,6 +1,7 @@
 'use strict';
 const moment = require('moment');
 const CustomerAppController = require('../controllers/customerApp');
+const AppController = require('../controllers/application');
 const customerAppController = new CustomerAppController();
 
 module.exports = class CustomerApp {
@@ -80,8 +81,19 @@ module.exports = class CustomerApp {
           '[Usecase][CustomerApp][queryItems][Error] Required parameters not found!'
         );
       }
-      const ret = await this.controller.queryItems(req.query.customerId);
+      const customerapps = await this.controller.queryItems(req.query.customerId);
+      console.log(customerapps);
+
+      const appController = new AppController();
+      const ret = await Promise.all(customerapps.map(async (customerapp) => {
+        const app = await appController.getItem(customerapp.appId);
+        return Object.assign(customerapp, {
+          appName: app.name,
+          description: app.description
+        });
+      }));
       console.log(ret);
+
       res.status(200).send(JSON.stringify(ret));
     } catch (err) {
       console.error(err.stack);

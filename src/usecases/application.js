@@ -40,6 +40,7 @@ module.exports = class Application {
       const data = {
         id: uuid.v4(),
         name: req.body.name,
+        description: !req.body.description ? '' : req.body.description,
         createdAt: now,
         updatedAt: now
       };
