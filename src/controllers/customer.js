@@ -41,6 +41,8 @@ module.exports = class Customer extends DynamoDB {
       Item: {
         ppk: DATA_NAME,
         psk: data.id,
+        gsi1pk: DATA_NAME,
+        gsi1sk: data.email,
         ...data
       }
     };
@@ -94,5 +96,38 @@ module.exports = class Customer extends DynamoDB {
       return customer.toJson();
     });
     return items;
+  }
+
+  getItemByEmail = async (email) => {
+    console.log('[Controller][Customer][getItemByEmail] Start getItem by Email');
+
+    const params = {
+      TableName: process.env.TABLE_NAME,
+      IndexName: 'GSI1',
+      KeyConditionExpression: '#PartitionKey=:data and #SortKey=:email',
+      ExpressionAttributeNames: {
+        '#PartitionKey': 'gsi1pk',
+        '#SortKey': 'gsi1sk'
+      },
+      ExpressionAttributeValues: {
+        ':data': DATA_NAME,
+        ':email': email
+      }
+    };
+
+    const ret = await this.query(params);
+    console.log(ret);
+
+    if (!ret.Items || ret.Items.length === 0) {
+      throw new Error(
+        '[Controller][Customer][getItemByEmail][Error] Items not found!'
+      );
+    }
+    if (ret.Items.length > 1) {
+      throw new Error('[Controller][Customer][getItemByEmail][Error] Items duplicated!');
+    }
+
+    const item = new CustomerModel(ret.Items[0]);
+    return item.toJson();
   }
 };

@@ -2,6 +2,7 @@
 const moment = require('moment');
 const CustomerAppController = require('../controllers/customerApp');
 const AppController = require('../controllers/application');
+const CustomerController = require('../controllers/customer');
 const customerAppController = new CustomerAppController();
 
 module.exports = class CustomerApp {
@@ -91,6 +92,33 @@ module.exports = class CustomerApp {
           appName: app.name,
           description: app.description
         });
+      }));
+      console.log(ret);
+
+      res.status(200).send(JSON.stringify(ret));
+    } catch (err) {
+      console.error(err.stack);
+      next(err);
+    }
+  }
+
+  queryItemsByApp = async (req, res, next) => {
+    console.log('[Usecase][CustomerApp][queryItemsByApp] Start query customers by app');
+
+    try {
+      if (!req.query || !req.query.appId) {
+        throw new Error(
+          '[Usecase][CustomerApp][queryItemsByApp][Error] Required parameter not found!'
+        );
+      }
+
+      const customerapps = await this.controller.queryItemsByApp(req.query.appId);
+      console.log(customerapps);
+
+      const customerController = new CustomerController();
+      const ret = await Promise.all(customerapps.map(async (customerapp) => {
+        const customer = await customerController.getItem(customerapp.customerId);
+        return Object.assign(customerapp, { customerName: customer.name });
       }));
       console.log(ret);
 

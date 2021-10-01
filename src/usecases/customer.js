@@ -82,4 +82,22 @@ module.exports = class Customer {
       next(err);
     }
   }
+
+  getItemByEmail = async (req, res, next) => {
+    console.log('[Usecase][Customer][getItemByEmail] Start getItem by Email');
+
+    try {
+      if (!req.query || !req.query.email) {
+        throw new Error(
+          '[Usecase][Customer][getItemByEmail][Error] Email not found!'
+        );
+      }
+      const ret = await this.controller.getItemByEmail(req.query.email);
+      console.log(ret);
+      res.status(200).send(JSON.stringify(ret));
+    } catch (err) {
+      console.error(err.stack);
+      next(err);
+    }
+  }
 };

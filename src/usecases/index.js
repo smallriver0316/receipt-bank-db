@@ -26,6 +26,7 @@ router.get('/customer', customer.getItem);
 router.post('/customer', customer.putItem);
 router.delete('/customer', customer.deleteItem);
 router.get('/customer/list', customer.queryItems);
+router.get('/customer/email', customer.getItemByEmail);
 // application
 router.get('/application', application.getItem);
 router.post('/application', application.putItem);
@@ -35,6 +36,7 @@ router.get('/custoerapp', customerApp.getItem);
 router.post('/customerapp', customerApp.putItem);
 router.delete('/customerapp', customerApp.deleteItem);
 router.get('/customerapp/list', customerApp.queryItems);
+router.get('/customerapp/app', customerApp.queryItemsByApp);
 // product
 router.get('/product', product.getItem);
 router.post('/product', product.putItem);
