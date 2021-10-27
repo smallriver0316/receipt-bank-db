@@ -26,9 +26,8 @@ module.exports = class CustomerApp extends DynamoDB {
 
     const ret = await this.get(params);
     if (!ret.Item) {
-      throw new Error(
-        '[Controller][CustomerApp][getItem][Error] Item not found!'
-      );
+      console.error('[Controller][CustomerApp][getItem][Error] Item not found!');
+      throw new Error('Item not found!');
     }
 
     const item = new CustomerAppModel(ret.Item);
@@ -90,9 +89,8 @@ module.exports = class CustomerApp extends DynamoDB {
     console.log(ret);
 
     if (!ret.Items || ret.Items.length === 0) {
-      throw new Error(
-        '[Controller][CustomerApp][queryItems][Error] Items not found!'
-      );
+      console.error('[Controller][CustomerApp][queryItems][Error] Items not found!');
+      throw new Error('Items not found!');
     }
 
     const items = ret.Items.map(item => {
@@ -123,9 +121,8 @@ module.exports = class CustomerApp extends DynamoDB {
     console.log(ret);
 
     if (!ret.Items || ret.Items.length === 0) {
-      throw new Error(
-        '[Controller][CustomerApp][queryItemsByApp] Items not found!'
-      );
+      console.error('[Controller][CustomerApp][queryItemsByApp] Items not found!');
+      throw new Error('Items not found!');
     }
 
     const items = ret.Items.map(item => {

@@ -15,9 +15,8 @@ module.exports = class Application {
     console.log('[Usecase][Application][getItem] Start get an application');
     try {
       if (!req.query || !req.query.id) {
-        throw new Error(
-          '[Usecase][Application][getItem][Error] Application ID not found!'
-        );
+        console.error('[Usecase][Application][getItem][Error] Application ID not found!');
+        throw new Error('Application ID not found!');
       }
 
       const app = await this.controller.getItem(req.query.id);
@@ -49,9 +48,10 @@ module.exports = class Application {
     console.log('[Usecase][Application][putItem] Start put an application');
     try {
       if (!req.body || !req.body.name) {
-        throw new Error(
+        console.error(
           '[Usecase][Application][putItem][Error] Request payload not found!'
         );
+        throw new Error('Request payload not found!');
       }
 
       const now = moment().format('YYYY-MM-DDTHH:mm:ssZ');
@@ -77,9 +77,10 @@ module.exports = class Application {
 
     try {
       if (!req.query || !req.query.id) {
-        throw new Error(
+        console.error(
           '[Usecase][Application][deleteItem][Error] Application ID not found!'
         );
+        throw new Error('Application ID not found!');
       }
 
       const ret = await this.controller.deleteItem(req.query.id);

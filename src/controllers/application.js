@@ -26,9 +26,8 @@ module.exports = class Application extends DynamoDB {
 
     const ret = await this.get(params);
     if (!ret.Item) {
-      throw new Error(
-        '[Controller][Application][getItem][Error] Item not found!'
-      );
+      console.error('[Controller][Application][getItem][Error] Item not found!');
+      throw new Error('Item not found!');
     }
 
     const item = new AppModel(ret.Item);

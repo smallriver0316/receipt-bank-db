@@ -14,9 +14,10 @@ module.exports = class Authority {
 
     try {
       if (!req.query || !req.query.appId || !req.query.authorityId) {
-        throw new Error(
+        console.error(
           '[Usecase][Authority][getItem][Error] Required parameters not found!'
         );
+        throw new Error('Required parameters not found!');
       }
       const ret = await this.controller.getItem(
         req.query.appId,
@@ -35,9 +36,8 @@ module.exports = class Authority {
 
     try {
       if (!req.body || !req.body.appId || !req.body.name) {
-        throw new Error(
-          '[Usecase][Authority][putItem] Required parameters not found!'
-        );
+        console.error('[Usecase][Authority][putItem] Required parameters not found!');
+        throw new Error('Required parameters not found!');
       }
       const now = moment().format('YYYY-MM-DDTHH:mm:ssZ');
       const data = {
@@ -60,9 +60,10 @@ module.exports = class Authority {
 
     try {
       if (!req.query || !req.query.appId || !req.query.authorityId) {
-        throw new Error(
+        console.error(
           '[Usecase][Authority][getItem][Error] Required parameters not found!'
         );
+        throw new Error('Required parameters not found!');
       }
       const ret = await this.controller.deleteItem(
         req.query.appId,
@@ -80,9 +81,10 @@ module.exports = class Authority {
 
     try {
       if (!req.query || !req.query.appId) {
-        throw new Error(
+        console.error(
           '[Usecase][Authority][queryItems][Error] Required parameters not found!'
         );
+        throw new Error('Required parameters not found!');
       }
       const ret = await this.controller.queryItems(req.query.appId);
       console.log(ret);

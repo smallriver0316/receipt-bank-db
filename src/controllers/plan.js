@@ -26,9 +26,8 @@ module.exports = class Plan extends DynamoDB {
 
     const ret = await this.get(params);
     if (!ret.Item) {
-      throw new Error(
-        '[Controller][Plan][getItem][Error] Item not found!'
-      );
+      console.error('[Controller][Plan][getItem][Error] Item not found!');
+      throw new Error('Item not found!');
     }
 
     const item = new PlanModel(ret.Item);
@@ -88,9 +87,8 @@ module.exports = class Plan extends DynamoDB {
     console.log(ret);
 
     if (!ret.Items || ret.Items.length === 0) {
-      throw new Error(
-        '[Controller][Plan][queryItems][Error] Items not found!'
-      );
+      console.error('[Controller][Plan][queryItems][Error] Items not found!');
+      throw new Error('Items not found!');
     }
 
     const items = ret.Items.map(item => {

@@ -26,9 +26,8 @@ module.exports = class Receipt extends DynamoDB {
 
     const ret = await this.get(params);
     if (!ret.Item) {
-      throw new Error(
-        '[Controller][Receipt][getItem][Error] Item not found!'
-      );
+      console.error('[Controller][Receipt][getItem][Error] Item not found!');
+      throw new Error('Item not found!');
     }
 
     const item = new ReceiptModel(ret.Item);
@@ -97,9 +96,8 @@ module.exports = class Receipt extends DynamoDB {
     console.log(ret);
 
     if (!ret.Items || ret.Items.length === 0) {
-      throw new Error(
-        '[Controller][Receipt][queryItems][Error] Items not found!'
-      );
+      console.error('[Controller][Receipt][queryItems][Error] Items not found!');
+      throw new Error('Items not found!');
     }
 
     const items = ret.Items.map(item => {

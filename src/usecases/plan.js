@@ -14,9 +14,10 @@ module.exports = class Plan {
 
     try {
       if (!req.query || !req.query.appId || !req.query.planId) {
-        throw new Error(
+        console.error(
           '[Usecase][Plan][getItem] Required parameters not found!'
         );
+        throw new Error('Required parameters not found!');
       }
       const ret = await this.controller.getItem(req.query.appId, req.query.planId);
       console.log(ret);
@@ -32,9 +33,10 @@ module.exports = class Plan {
 
     try {
       if (!req.body || !req.body.name || !req.body.appId) {
-        throw new Error(
+        console.error(
           '[Usecase][Plan][putItem][Error] Required prameters not found!'
         );
+        throw new Error('Required prameters not found!');
       }
       const now = moment().format('YYYY-MM-DDTHH:mm:ssZ');
       const data = {
@@ -58,9 +60,10 @@ module.exports = class Plan {
 
     try {
       if (!req.query || !req.query.appId || !req.query.planId) {
-        throw new Error(
+        console.error(
           '[Usecase][Plan][getItem][Error] Required parameters not found!'
         );
+        throw new Error('Required parameters not found!');
       }
       const ret = await this.controller.deleteItem(
         req.query.appId,
@@ -78,9 +81,10 @@ module.exports = class Plan {
 
     try {
       if (!req.query || !req.query.appId) {
-        throw new Error(
+        console.error(
           '[Usecase][Plan][queryItems][Error] Required parameters not found!'
         );
+        throw new Error('Required parameters not found!');
       }
       const ret = await this.controller.queryItems(req.query.appId);
       console.log(ret);

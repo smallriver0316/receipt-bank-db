@@ -15,9 +15,11 @@ module.exports = class CustomerApp {
 
     try {
       if (!req.query || !req.query.customerId || !req.query.appId) {
-        throw new Error(
+        console.error(
           '[Usecase][CustomerApp][getItem][Error] Required parameters not found!'
         );
+        console.error(req.query);
+        throw new Error('Required parameters not found!');
       }
       const ret = await this.controller.getItem(req.query.customerId, req.query.appId);
       console.log(ret);
@@ -33,9 +35,11 @@ module.exports = class CustomerApp {
 
     try {
       if (!req.body || !req.body.customerId || !req.body.appId || !req.body.appName) {
-        throw new Error(
+        console.error(
           '[Usecase][CustomerApp][putItem][Error] Required parameters not found!'
         );
+        console.error(req.body);
+        throw new Error('Required parameters not found!');
       }
       const now = moment().format('YYYY-MM-DDTHH:mm:ssZ');
       const data = {
@@ -59,10 +63,11 @@ module.exports = class CustomerApp {
 
     try {
       if (!req.query || !req.query.customerId || !req.query.appId) {
-        console.log(req.query);
-        throw new Error(
+        console.error(
           '[Usecase][CustomerApp][getItem][Error] Required parameters not found!'
         );
+        console.error(req.query);
+        throw new Error('Required parameters not found!');
       }
       const ret = await this.controller.deleteItem(req.query.customerId, req.query.appId);
       console.log(ret);
@@ -78,9 +83,11 @@ module.exports = class CustomerApp {
 
     try {
       if (!req.query || !req.query.customerId) {
-        throw new Error(
+        console.error(
           '[Usecase][CustomerApp][queryItems][Error] Required parameters not found!'
         );
+        console.error(req.query);
+        throw new Error('Required parameters not found!');
       }
       const customerapps = await this.controller.queryItems(req.query.customerId);
       console.log(customerapps);
@@ -107,9 +114,11 @@ module.exports = class CustomerApp {
 
     try {
       if (!req.query || !req.query.appId) {
-        throw new Error(
+        console.error(
           '[Usecase][CustomerApp][queryItemsByApp][Error] Required parameter not found!'
         );
+        console.error(req.query);
+        throw new Error('Required parameter not found!');
       }
 
       const customerapps = await this.controller.queryItemsByApp(req.query.appId);

@@ -14,9 +14,10 @@ module.exports = class Product {
 
     try {
       if (!req.query || !req.query.appId || !req.query.productId) {
-        throw new Error(
+        console.error(
           '[Usecase][Product][getItem] Required parameters not found!'
         );
+        throw new Error('Required parameters not found!');
       }
       const ret = await this.controller.getItem(req.query.appId, req.query.productId);
       console.log(ret);
@@ -32,9 +33,10 @@ module.exports = class Product {
 
     try {
       if (!req.body || !req.body.name || !req.body.appId || !req.body.store) {
-        throw new Error(
+        console.error(
           '[Usecase][Product][putItem][Error] Required prameters not found!'
         );
+        throw new Error('Required prameters not found!');
       }
       const now = moment().format('YYYY-MM-DDTHH:mm:ssZ');
       const storeProductId = !req.body.storeProductId ? '' : req.body.storeProductId;
@@ -65,9 +67,10 @@ module.exports = class Product {
     try {
       if (!req.query || !req.query.appId || !req.query.productId) {
         console.log(req.query);
-        throw new Error(
+        console.error(
           '[Usecase][Product][deleteItem][Error] Required parameters not found!'
         );
+        throw new Error('Required parameters not found!');
       }
       const ret = await this.controller.deleteItem(
         req.query.appId,
@@ -85,9 +88,10 @@ module.exports = class Product {
 
     try {
       if (!req.query || !req.query.appId) {
-        throw new Error(
+        console.error(
           '[Usecase][Product][queryItems][Error] Required parameters not found!'
         );
+        throw new Error('Required parameters not found!');
       }
       const storeName = !req.query.store ? '' : req.query.store;
       const ret = await this.controller.queryItems(req.query.appId, storeName);
