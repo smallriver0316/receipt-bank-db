@@ -2,6 +2,8 @@
 const moment = require('moment');
 const uuid = require('uuid');
 const AppController = require('../controllers/application');
+const CustomerAppController = require('../controllers/customerApp');
+const CustomerController = require('../controllers/customer');
 const appContoller = new AppController();
 
 module.exports = class Application {
@@ -18,8 +20,24 @@ module.exports = class Application {
         );
       }
 
-      const ret = await this.controller.getItem(req.query.id);
-      console.log(ret);
+      const app = await this.controller.getItem(req.query.id);
+      console.log(app);
+
+      const customerAppController = new CustomerAppController();
+      const customerApps = await customerAppController.queryItemsByApp(req.query.id);
+
+      const customerController = new CustomerController();
+      const customers = await Promise.all(customerApps.map(async (customerApp) => {
+        const customer = await customerController.getItem(customerApp.customerId);
+        return {
+          id: customer.id,
+          name: customer.name,
+          role: customerApp.userRole
+        };
+      }));
+
+      const ret = Object.assign(app, { developers: customers });
+
       res.status(200).send(JSON.stringify(ret));
     } catch(err) {
       console.error(err.stack);
