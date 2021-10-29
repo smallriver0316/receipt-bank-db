@@ -94,4 +94,33 @@ module.exports = class Authority {
       next(err);
     }
   }
+
+  batchDeleteItems = async (req, res, next) => {
+    console.log('[Usecase][Authority][batchDeleteItems] Start batch delete authorities');
+
+    try {
+      if (!req.query || !req.query.appId || !req.query.authorityId) {
+        console.error(
+          '[Usecase][Authority][batchDeleteItems][Error] Required parameters not found!'
+        );
+        throw new Error('Required parameters not found!');
+      }
+
+      let authorityIds = [];
+      if (Array.isArray(req.query.authorityId)) {
+        authorityIds = req.query.authorityId;
+      } else {
+        authorityIds = [req.query.authorityId];
+      }
+
+      const ret = await this.controller.batchDeleteItems(
+        req.query.appId,
+        authorityIds
+      );
+      res.status(200).send(JSON.stringify(ret));
+    } catch (err) {
+      console.error(err.stack);
+      next(err);
+    }
+  }
 };

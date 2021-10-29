@@ -83,4 +83,20 @@ module.exports = class DynamoDB {
       });
     });
   }
+
+  batchWriteItems = async (params) => {
+    console.log('[DynamoDB][batchWriteItems] start batch write items');
+
+    return new Promise((resolve, reject) => {
+      this.client.batchWrite(params, (err, data) => {
+        if (err) {
+          console.error('[DynamoDB][batchWriteItems][Error] Failed batch writing');
+          reject(err);
+        } else {
+          console.log('[DynamoDB][batchWriteItems] Succeeded batch writing');
+          resolve(data);
+        }
+      });
+    });
+  }
 };

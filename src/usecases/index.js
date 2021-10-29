@@ -47,6 +47,7 @@ router.get('/authority', authority.getItem);
 router.post('/authority', authority.putItem);
 router.delete('/authority', authority.deleteItem);
 router.get('/authority/list', authority.queryItems);
+router.delete('/authority/list', authority.batchDeleteItems);
 // plan
 router.get('/plan', plan.getItem);
 router.post('/plan', plan.putItem);

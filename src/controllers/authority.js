@@ -97,4 +97,37 @@ module.exports = class Authority extends DynamoDB {
     });
     return items;
   }
+
+  batchDeleteItems = async (appId, authorityIds) => {
+    console.log('[Controller][Authority][batchDeleteItems] Start batch delete items');
+
+    const requestItems = authorityIds.map(id => ({
+      DeleteRequest: {
+        Key: {
+          ppk: DATA_NAME,
+          psk: `${appId}/${id}`
+        }
+      }
+    }));
+    const params = {
+      RequestItems: {
+        [process.env.TABLE_NAME]: requestItems
+      }
+    };
+
+    const ret = await this.batchWriteItems(params);
+    console.log(ret);
+    // if (ret.UnprocessedItems && ret.UnprocessedItems.[process.env.TABLE_NAME]) {
+    //   let unprocItems = [];
+    //   ret.UnprocessedItems.[process.env.TABLE_NAME].map(item => {
+    //     if (item.DeleteRequest) {
+    //       unprocItems.push(item.DeleteRequest);
+    //     }
+    //   });
+    //   return unprocItems;
+    // }
+
+    // return [];
+    return ret;
+  }
 };
