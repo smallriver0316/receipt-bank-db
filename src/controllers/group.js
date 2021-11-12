@@ -93,8 +93,8 @@ module.exports = class Group extends DynamoDB {
     }
 
     const items = ret.Items.map(item => {
-      const product = new GroupModel(item);
-      return product.toJson();
+      const group = new GroupModel(item);
+      return group.toJson();
     });
     return items;
   }

@@ -92,8 +92,8 @@ module.exports = class Plan extends DynamoDB {
     }
 
     const items = ret.Items.map(item => {
-      const product = new PlanModel(item);
-      return product.toJson();
+      const plan = new PlanModel(item);
+      return plan.toJson();
     });
     return items;
   }

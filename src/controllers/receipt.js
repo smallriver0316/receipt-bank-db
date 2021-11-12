@@ -101,8 +101,8 @@ module.exports = class Receipt extends DynamoDB {
     }
 
     const items = ret.Items.map(item => {
-      const product = new ReceiptModel(item);
-      return product.toJson();
+      const receipt = new ReceiptModel(item);
+      return receipt.toJson();
     });
     return items;
   }

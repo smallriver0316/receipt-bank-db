@@ -78,8 +78,8 @@ module.exports = class User extends DynamoDB {
     }
 
     const items = ret.Items.map(item => {
-      const product = new UserModel(item);
-      return product.toJson();
+      const user = new UserModel(item);
+      return user.toJson();
     });
     return items;
   }

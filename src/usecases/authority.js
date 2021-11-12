@@ -42,9 +42,9 @@ module.exports = class Authority {
       const now = moment().format('YYYY-MM-DDTHH:mm:ssZ');
       const data = {
         appId: req.body.appId,
-        id: uuid.v4(),
+        id: !req.body.id ? uuid.v4() : req.body.id,
         name: req.body.name,
-        createdAt: now,
+        createdAt: !req.body.createdAt ? now : req.body.createdAt,
         updatedAt: now
       };
       await this.controller.putItem(data);

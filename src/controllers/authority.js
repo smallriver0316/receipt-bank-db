@@ -92,8 +92,8 @@ module.exports = class Authority extends DynamoDB {
     }
 
     const items = ret.Items.map(item => {
-      const product = new AuthorityModel(item);
-      return product.toJson();
+      const authority = new AuthorityModel(item);
+      return authority.toJson();
     });
     return items;
   }
@@ -117,17 +117,12 @@ module.exports = class Authority extends DynamoDB {
 
     const ret = await this.batchWriteItems(params);
     console.log(ret);
-    // if (ret.UnprocessedItems && ret.UnprocessedItems.[process.env.TABLE_NAME]) {
-    //   let unprocItems = [];
-    //   ret.UnprocessedItems.[process.env.TABLE_NAME].map(item => {
-    //     if (item.DeleteRequest) {
-    //       unprocItems.push(item.DeleteRequest);
-    //     }
-    //   });
-    //   return unprocItems;
-    // }
 
-    // return [];
+    if (ret.UnprocessedItems && Object.keys(ret.UnprocessedItems).length > 0) {
+      console.error('[Controller][Authority][batchDeleteItems] Failed to delete items');
+      throw new Error('Failed to delete items');
+    }
+
     return ret;
   }
 };
