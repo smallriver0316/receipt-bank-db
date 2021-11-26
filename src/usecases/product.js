@@ -39,18 +39,14 @@ module.exports = class Product {
         throw new Error('Required prameters not found!');
       }
       const now = moment().format('YYYY-MM-DDTHH:mm:ssZ');
-      const storeProductId = !req.body.storeProductId ? '' : req.body.storeProductId;
       const data = {
         appId: req.body.appId,
-        id: uuid.v4(),
+        id: !req.body.id ? uuid.v4() : req.body.id,
         store: req.body.store,
-        storeProductId,
+        storeProductId: !req.body.storeProductId ? '' : req.body.storeProductId,
         name: req.body.name,
-        authority: {
-          id: '',
-          name: ''
-        },
-        createdAt: now,
+        authority: !req.body.authority ? { id: '', name: ''} : req.body.authority,
+        createdAt: !req.body.createdAt ? now : req.body.createdAt,
         updatedAt: now
       };
       await this.controller.putItem(data);
@@ -96,6 +92,35 @@ module.exports = class Product {
       const storeName = !req.query.store ? '' : req.query.store;
       const ret = await this.controller.queryItems(req.query.appId, storeName);
       console.log(ret);
+      res.status(200).send(JSON.stringify(ret));
+    } catch (err) {
+      console.error(err.stack);
+      next(err);
+    }
+  }
+
+  batchDeleteItems = async (req, res, next) => {
+    console.log('[Usecase][Product][batchDeleteItems] Start batch delete products');
+
+    try {
+      if (!req.query || !req.query.appId || !req.query.productId) {
+        console.error(
+          '[Usecase][Product][batchDeleteItems][Error] Required parameters not found'
+        );
+        throw new Error('Required parameters not found');
+      }
+
+      let productIds = [];
+      if (Array.isArray(req.query.productId)) {
+        productIds = req.query.productId;
+      } else {
+        productIds = [req.query.productId];
+      }
+
+      const ret = await this.controller.batchDeleteItems(
+        req.query.appId,
+        productIds
+      );
       res.status(200).send(JSON.stringify(ret));
     } catch (err) {
       console.error(err.stack);

@@ -104,4 +104,32 @@ module.exports = class Product extends DynamoDB {
 
     return items;
   }
+
+  batchDeleteItems = async (appId, productIds) => {
+    console.log('[Controller][Product][batchDeleteItems] Start batch delete items');
+
+    const requestItems = productIds.map(id => ({
+      DeleteRequest: {
+        Key: {
+          ppk: DATA_NAME,
+          psk: `${appId}/${id}`
+        }
+      }
+    }));
+    const params = {
+      RequestItems: {
+        [process.env.TABLE_NAME]: requestItems
+      }
+    };
+
+    const ret = await this.batchWriteItems(params);
+    console.log(ret);
+
+    if (ret.UnprocessedItems && Object.keys(ret.UnprocessedItems).length > 0) {
+      console.error('[Controller][Product][batchDeleteItems] Failed to delete items');
+      throw new Error('Failed to delete items');
+    }
+
+    return ret;
+  }
 };

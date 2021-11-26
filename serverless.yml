@@ -191,6 +191,10 @@ functions:
           method: get
           cors: true
       - http:
+          path: v1/product/list/
+          method: delete
+          cors: true
+      - http:
           path: v1/authority/
           method: get
           cors: true

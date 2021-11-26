@@ -42,6 +42,7 @@ router.get('/product', product.getItem);
 router.post('/product', product.putItem);
 router.delete('/product', product.deleteItem);
 router.get('/product/list', product.queryItems);
+router.delete('/product/list', product.batchDeleteItems);
 // authority
 router.get('/authority', authority.getItem);
 router.post('/authority', authority.putItem);
