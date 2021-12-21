@@ -2,6 +2,7 @@
 const moment = require('moment');
 const uuid = require('uuid');
 const ProductController = require('../controllers/product');
+const AuthorityController = require('../controllers/authority');
 const productController = new ProductController();
 
 module.exports = class Product {
@@ -19,9 +20,17 @@ module.exports = class Product {
         );
         throw new Error('Required parameters not found!');
       }
-      const ret = await this.controller.getItem(req.query.appId, req.query.productId);
-      console.log(ret);
-      res.status(200).send(JSON.stringify(ret));
+
+      const product = await this.controller.getItem(req.query.appId, req.query.productId);
+
+      const authorityController = new AuthorityController();
+      const authority = await authorityController.getItem(
+        product.appId,
+        product.authority.id
+      );
+      product.authority.name = authority.name;
+
+      res.status(200).send(JSON.stringify(product));
     } catch (err) {
       console.error(err.stack);
       next(err);
@@ -39,18 +48,31 @@ module.exports = class Product {
         throw new Error('Required prameters not found!');
       }
       const now = moment().format('YYYY-MM-DDTHH:mm:ssZ');
-      const data = {
+      const product = {
         appId: req.body.appId,
         id: !req.body.id ? uuid.v4() : req.body.id,
         store: req.body.store,
         storeProductId: !req.body.storeProductId ? '' : req.body.storeProductId,
         name: req.body.name,
-        authority: !req.body.authority ? { id: '', name: ''} : req.body.authority,
+        authority: !req.body.authority ? { id: '' } : req.body.authority,
         createdAt: !req.body.createdAt ? now : req.body.createdAt,
         updatedAt: now
       };
-      await this.controller.putItem(data);
-      res.status(200).send(JSON.stringify(data));
+      await this.controller.putItem(product);
+
+      if (req.body.authority && req.body.authority.id) {
+        const authorityController = new AuthorityController();
+        const authority = await authorityController.getItem(
+          product.appId,
+          product.authority.id
+        );
+        product.authority = {
+          id: authority.id,
+          name: authority.name
+        };
+      }
+
+      res.status(200).send(JSON.stringify(product));
     } catch (err) {
       console.error(err.stack);
       next(err);
@@ -90,8 +112,17 @@ module.exports = class Product {
         throw new Error('Required parameters not found!');
       }
       const storeName = !req.query.store ? '' : req.query.store;
-      const ret = await this.controller.queryItems(req.query.appId, storeName);
-      console.log(ret);
+      const products = await this.controller.queryItems(req.query.appId, storeName);
+
+      const authorityController = new AuthorityController();
+      const ret = await Promise.all(products.map(async (product) => {
+        const authority = await authorityController.getItem(
+          product.appId,
+          product.authority.id
+        );
+        product.authority.name = authority.name;
+        return product;
+      }));
       res.status(200).send(JSON.stringify(ret));
     } catch (err) {
       console.error(err.stack);
