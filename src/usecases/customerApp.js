@@ -21,8 +21,18 @@ module.exports = class CustomerApp {
         console.error(req.query);
         throw new Error('Required parameters not found!');
       }
-      const ret = await this.controller.getItem(req.query.customerId, req.query.appId);
-      console.log(ret);
+      const customerApp = await this.controller.getItem(
+        req.query.customerId,
+        req.query.appId
+      );
+      console.log(customerApp);
+
+      const appController = new AppController();
+      const app = await appController.getItem(customerApp.appId);
+      const ret = Object.assign(customerApp, {
+        appName: app.name,
+        description: app.description
+      });
       res.status(200).send(JSON.stringify(ret));
     } catch (err) {
       console.error(err.stack);
@@ -89,13 +99,13 @@ module.exports = class CustomerApp {
         console.error(req.query);
         throw new Error('Required parameters not found!');
       }
-      const customerapps = await this.controller.queryItems(req.query.customerId);
-      console.log(customerapps);
+      const customerApps = await this.controller.queryItems(req.query.customerId);
+      console.log(customerApps);
 
       const appController = new AppController();
-      const ret = await Promise.all(customerapps.map(async (customerapp) => {
-        const app = await appController.getItem(customerapp.appId);
-        return Object.assign(customerapp, {
+      const ret = await Promise.all(customerApps.map(async (customerApp) => {
+        const app = await appController.getItem(customerApp.appId);
+        return Object.assign(customerApp, {
           appName: app.name,
           description: app.description
         });
@@ -121,13 +131,13 @@ module.exports = class CustomerApp {
         throw new Error('Required parameter not found!');
       }
 
-      const customerapps = await this.controller.queryItemsByApp(req.query.appId);
-      console.log(customerapps);
+      const customerApps = await this.controller.queryItemsByApp(req.query.appId);
+      console.log(customerApps);
 
       const customerController = new CustomerController();
-      const ret = await Promise.all(customerapps.map(async (customerapp) => {
-        const customer = await customerController.getItem(customerapp.customerId);
-        return Object.assign(customerapp, { customerName: customer.name });
+      const ret = await Promise.all(customerApps.map(async (customerApp) => {
+        const customer = await customerController.getItem(customerApp.customerId);
+        return Object.assign(customerApp, { customerName: customer.name });
       }));
       console.log(ret);
 

@@ -47,7 +47,7 @@ module.exports = class Application {
   putItem = async (req, res, next) => {
     console.log('[Usecase][Application][putItem] Start put an application');
     try {
-      if (!req.body || !req.body.name) {
+      if (!req.body || !req.body.customerId || !req.body.name) {
         console.error(
           '[Usecase][Application][putItem][Error] Request payload not found!'
         );
@@ -55,16 +55,26 @@ module.exports = class Application {
       }
 
       const now = moment().format('YYYY-MM-DDTHH:mm:ssZ');
-      const data = {
+      const app = {
         id: uuid.v4(),
         name: req.body.name,
         description: !req.body.description ? '' : req.body.description,
         createdAt: now,
         updatedAt: now
       };
+      await this.controller.putItem(app);
 
-      await this.controller.putItem(data);
-      res.status(200).send(JSON.stringify(data));
+      const customerApp = {
+        customerId: req.body.customerId,
+        appId: app.id,
+        userRole: 'admin',
+        createdAt: now,
+        updatedAt: now
+      };
+      const customerAppController = new CustomerAppController();
+      await customerAppController.putItem(customerApp);
+
+      res.status(200).send(JSON.stringify(app));
     } catch(err) {
       next(err);
     }
