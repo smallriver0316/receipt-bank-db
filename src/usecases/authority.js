@@ -14,9 +14,10 @@ module.exports = class Authority {
 
     try {
       if (!req.query || !req.query.appId || !req.query.authorityId) {
-        throw new Error(
+        console.error(
           '[Usecase][Authority][getItem][Error] Required parameters not found!'
         );
+        throw new Error('Required parameters not found!');
       }
       const ret = await this.controller.getItem(
         req.query.appId,
@@ -35,16 +36,15 @@ module.exports = class Authority {
 
     try {
       if (!req.body || !req.body.appId || !req.body.name) {
-        throw new Error(
-          '[Usecase][Authority][putItem] Required parameters not found!'
-        );
+        console.error('[Usecase][Authority][putItem] Required parameters not found!');
+        throw new Error('Required parameters not found!');
       }
       const now = moment().format('YYYY-MM-DDTHH:mm:ssZ');
       const data = {
         appId: req.body.appId,
-        id: uuid.v4(),
+        id: !req.body.id ? uuid.v4() : req.body.id,
         name: req.body.name,
-        createdAt: now,
+        createdAt: !req.body.createdAt ? now : req.body.createdAt,
         updatedAt: now
       };
       await this.controller.putItem(data);
@@ -60,9 +60,10 @@ module.exports = class Authority {
 
     try {
       if (!req.query || !req.query.appId || !req.query.authorityId) {
-        throw new Error(
+        console.error(
           '[Usecase][Authority][getItem][Error] Required parameters not found!'
         );
+        throw new Error('Required parameters not found!');
       }
       const ret = await this.controller.deleteItem(
         req.query.appId,
@@ -80,14 +81,44 @@ module.exports = class Authority {
 
     try {
       if (!req.query || !req.query.appId) {
-        throw new Error(
+        console.error(
           '[Usecase][Authority][queryItems][Error] Required parameters not found!'
         );
+        throw new Error('Required parameters not found!');
       }
       const ret = await this.controller.queryItems(req.query.appId);
       console.log(ret);
       res.status(200).send(JSON.stringify(ret));
     } catch(err) {
+      console.error(err.stack);
+      next(err);
+    }
+  }
+
+  batchDeleteItems = async (req, res, next) => {
+    console.log('[Usecase][Authority][batchDeleteItems] Start batch delete authorities');
+
+    try {
+      if (!req.query || !req.query.appId || !req.query.authorityId) {
+        console.error(
+          '[Usecase][Authority][batchDeleteItems][Error] Required parameters not found!'
+        );
+        throw new Error('Required parameters not found!');
+      }
+
+      let authorityIds = [];
+      if (Array.isArray(req.query.authorityId)) {
+        authorityIds = req.query.authorityId;
+      } else {
+        authorityIds = [req.query.authorityId];
+      }
+
+      const ret = await this.controller.batchDeleteItems(
+        req.query.appId,
+        authorityIds
+      );
+      res.status(200).send(JSON.stringify(ret));
+    } catch (err) {
       console.error(err.stack);
       next(err);
     }

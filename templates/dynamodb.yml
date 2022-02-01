@@ -8,11 +8,24 @@ Resources:
           AttributeType: "S"
         - AttributeName: "psk"
           AttributeType: "S"
+        - AttributeName: "gsi1pk"
+          AttributeType: "S"
+        - AttributeName: "gsi1sk"
+          AttributeType: "S"
       KeySchema:
         - AttributeName: "ppk"
           KeyType: "HASH"
         - AttributeName: "psk"
           KeyType: "RANGE"
+      GlobalSecondaryIndexes:
+        - IndexName: "GSI1"
+          KeySchema:
+            - AttributeName: "gsi1pk"
+              KeyType: "HASH"
+            - AttributeName: "gsi1sk"
+              KeyType: "RANGE"
+          Projection:
+            ProjectionType: "ALL"
       TableName: "ReceiptBankDBTable"
       Tags:
         - Key: "AppName"

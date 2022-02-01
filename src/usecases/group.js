@@ -14,9 +14,11 @@ module.exports = class Group {
 
     try {
       if (!req.query || !req.query.planId || !req.query.groupId) {
-        throw new Error(
+        console.error(
           '[Usecase][Group][getItem] Required parameters not found!'
         );
+        console.error(req.query);
+        throw new Error('Required parameters not found!');
       }
       const ret = await this.controller.getItem(req.query.planId, req.query.groupId);
       console.log(ret);
@@ -32,9 +34,11 @@ module.exports = class Group {
 
     try {
       if (!req.body || !req.body.name || !req.body.planId) {
-        throw new Error(
+        console.error(
           '[Usecase][Group][putItem][Error] Required prameters not found!'
         );
+        console.error(req.body);
+        throw new Error('Required prameters not found!');
       }
       const now = moment().format('YYYY-MM-DDTHH:mm:ssZ');
       const data = {
@@ -60,9 +64,11 @@ module.exports = class Group {
 
     try {
       if (!req.query || !req.query.planId || !req.query.groupId) {
-        throw new Error(
+        console.error(
           '[Usecase][Group][getItem][Error] Required parameters not found!'
         );
+        console.error(req.query);
+        throw new Error('Required parameters not found!');
       }
       const ret = await this.controller.deleteItem(
         req.query.planId,
@@ -80,9 +86,11 @@ module.exports = class Group {
 
     try {
       if (!req.query || !req.query.planId) {
-        throw new Error(
+        console.error(
           '[Usecase][Group][queryItems][Error] Required parameters not found!'
         );
+        console.error(req.query);
+        throw new Error('Required parameters not found!');
       }
       const ret = await this.controller.queryItems(req.query.planId);
       console.log(ret);

@@ -26,9 +26,8 @@ module.exports = class CustomerApp extends DynamoDB {
 
     const ret = await this.get(params);
     if (!ret.Item) {
-      throw new Error(
-        '[Controller][CustomerApp][getItem][Error] Item not found!'
-      );
+      console.error('[Controller][CustomerApp][getItem][Error] Item not found!');
+      throw new Error('Item not found!');
     }
 
     const item = new CustomerAppModel(ret.Item);
@@ -43,6 +42,8 @@ module.exports = class CustomerApp extends DynamoDB {
       Item: {
         ppk: DATA_NAME,
         psk: `${data.customerId}/${data.appId}`,
+        gsi1pk: DATA_NAME,
+        gsi1sk: data.appId,
         ...data
       }
     };
@@ -88,9 +89,8 @@ module.exports = class CustomerApp extends DynamoDB {
     console.log(ret);
 
     if (!ret.Items || ret.Items.length === 0) {
-      throw new Error(
-        '[Controller][CustomerApp][queryItems][Error] Items not found!'
-      );
+      console.error('[Controller][CustomerApp][queryItems][Error] Items not found!');
+      throw new Error('Items not found!');
     }
 
     const items = ret.Items.map(item => {
@@ -98,5 +98,37 @@ module.exports = class CustomerApp extends DynamoDB {
       return customerApp.toJson();
     });
     return items;   
+  }
+
+  queryItemsByApp = async (appId) => {
+    console.log('[Controller][CustomerApp][queryItemsByApp] Start queryItems by App');
+
+    const params = {
+      TableName: process.env.TABLE_NAME,
+      IndexName: 'GSI1',
+      KeyConditionExpression: '#PartitionKey=:data and #SortKey=:app',
+      ExpressionAttributeNames: {
+        '#PartitionKey': 'gsi1pk',
+        '#SortKey': 'gsi1sk'
+      },
+      ExpressionAttributeValues: {
+        ':data': DATA_NAME,
+        ':app': appId
+      }
+    };
+
+    const ret = await this.query(params);
+    console.log(ret);
+
+    if (!ret.Items || ret.Items.length === 0) {
+      console.error('[Controller][CustomerApp][queryItemsByApp] Items not found!');
+      throw new Error('Items not found!');
+    }
+
+    const items = ret.Items.map(item => {
+      const customerApp = new CustomerAppModel(item);
+      return customerApp.toJson();
+    });
+    return items;
   }
 };

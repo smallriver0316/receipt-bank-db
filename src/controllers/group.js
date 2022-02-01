@@ -26,9 +26,8 @@ module.exports = class Group extends DynamoDB {
 
     const ret = await this.get(params);
     if (!ret.Item) {
-      throw new Error(
-        '[Controller][Group][getItem][Error] Item not found!'
-      );
+      console.error('[Controller][Group][getItem][Error] Item not found!');
+      throw new Error('Item not found!');
     }
 
     const item = new GroupModel(ret.Item);
@@ -89,14 +88,13 @@ module.exports = class Group extends DynamoDB {
     console.log(ret);
 
     if (!ret.Items || ret.Items.length === 0) {
-      throw new Error(
-        '[Controller][Group][queryItems][Error] Items not found!'
-      );
+      console.error('[Controller][Group][queryItems][Error] Items not found!');
+      throw new Error('Items not found!');
     }
 
     const items = ret.Items.map(item => {
-      const product = new GroupModel(item);
-      return product.toJson();
+      const group = new GroupModel(item);
+      return group.toJson();
     });
     return items;
   }

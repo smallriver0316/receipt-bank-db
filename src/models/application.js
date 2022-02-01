@@ -4,6 +4,7 @@ module.exports = class Application {
   constructor(application) {
     this.id = application.id;
     this.name = application.name;
+    this.description = application.description;
     this.createdAt = application.createdAt;
     this.updatedAt = application.updatedAt;
   }
@@ -19,6 +20,7 @@ module.exports = class Application {
   toJson = () => ({
     id: this.id,
     name: this.name,
+    description: this.description,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt
   });

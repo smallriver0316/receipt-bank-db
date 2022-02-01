@@ -14,9 +14,10 @@ module.exports = class Customer {
 
     try {
       if (!req.query || !req.query.id) {
-        throw new Error(
+        console.error(
           '[Usecase][Customer][getItem][Error] Customer ID not found!'
         );
+        throw new Error('Customer ID not found!');
       }
       const ret = await this.controller.getItem(req.query.id);
       console.log(ret);
@@ -32,9 +33,10 @@ module.exports = class Customer {
 
     try {
       if (!req.body || !req.body.name || !req.body.email) {
-        throw new Error(
+        console.error(
           '[Usecase][Customer][putItem][Error] Request payload not found!'
         );
+        throw new Error('Request payload not found!');
       }
       const now = moment().format('YYYY-MM-DDTHH:mm:ssZ');
       const data = {
@@ -57,9 +59,10 @@ module.exports = class Customer {
 
     try {
       if (!req.query || !req.query.id) {
-        throw new Error(
+        console.error(
           '[Usecase][Customer][getItem][Error] Customer ID not found!'
         );
+        throw new Error('Customer ID not found!');
       }
       const ret = await this.controller.deleteItem(req.query.id);
       console.log(ret);
@@ -75,6 +78,25 @@ module.exports = class Customer {
 
     try {
       const ret = await this.controller.queryItems();
+      console.log(ret);
+      res.status(200).send(JSON.stringify(ret));
+    } catch (err) {
+      console.error(err.stack);
+      next(err);
+    }
+  }
+
+  getItemByEmail = async (req, res, next) => {
+    console.log('[Usecase][Customer][getItemByEmail] Start getItem by Email');
+
+    try {
+      if (!req.query || !req.query.email) {
+        console.error(
+          '[Usecase][Customer][getItemByEmail][Error] Email not found!'
+        );
+        throw new Error('Email not found!');
+      }
+      const ret = await this.controller.getItemByEmail(req.query.email);
       console.log(ret);
       res.status(200).send(JSON.stringify(ret));
     } catch (err) {

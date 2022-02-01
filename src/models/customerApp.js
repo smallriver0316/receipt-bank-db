@@ -9,6 +9,10 @@ module.exports = class CustomerApp {
     this.updatedAt = customerApp.updatedAt;
   }
 
+  get ID() {
+    return this.appId;
+  }
+
   toJson = () => ({
     customerId: this.customerId,
     appId: this.appId,

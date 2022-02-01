@@ -14,9 +14,10 @@ module.exports = class User {
 
     try {
       if (!req.query || !req.query.appId || !req.query.userId) {
-        throw new Error(
+        console.error(
           '[Usecase][User][getItem] Required parameters not found!'
         );
+        throw new Error('Required parameters not found!');
       }
       const ret = await this.controller.getItem(req.query.appId, req.query.userId);
       console.log(ret);
@@ -32,9 +33,10 @@ module.exports = class User {
 
     try {
       if (!req.body || !req.body.appId) {
-        throw new Error(
+        console.error(
           '[Usecase][User][putItem][Error] Required prameters not found!'
         );
+        throw new Error('Required prameters not found!');
       }
       const now = moment().format('YYYY-MM-DDTHH:mm:ssZ');
       const data = {
@@ -55,9 +57,10 @@ module.exports = class User {
 
     try {
       if (!req.query || !req.query.appId) {
-        throw new Error(
+        console.error(
           '[Usecase][User][queryItems][Error] Required parameters not found!'
         );
+        throw new Error('Required parameters not found!');
       }
       const ret = await this.controller.queryItems(req.query.appId);
       console.log(ret);

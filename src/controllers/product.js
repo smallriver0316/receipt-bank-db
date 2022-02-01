@@ -26,9 +26,8 @@ module.exports = class Product extends DynamoDB {
 
     const ret = await this.get(params);
     if (!ret.Item) {
-      throw new Error(
-        '[Controller][Product][getItem][Error] Item not found!'
-      );
+      console.error('[Controller][Product][getItem][Error] Item not found!');
+      throw new Error('Item not found!');
     }
 
     const item = new ProductModel(ret.Item);
@@ -68,7 +67,7 @@ module.exports = class Product extends DynamoDB {
     return ret;
   }
 
-  queryItems = async (appId) => {
+  queryItems = async (appId, storeName='') => {
     console.log('[Controller][Product][queryItems] Start queryItems');
 
     const params = {
@@ -89,15 +88,48 @@ module.exports = class Product extends DynamoDB {
     console.log(ret);
 
     if (!ret.Items || ret.Items.length === 0) {
-      throw new Error(
-        '[Controller][Product][queryItems][Error] Items not found!'
-      );
+      console.error('[Controller][Product][queryItems][Error] Items not found!');
+      throw new Error('Items not found!');
     }
 
-    const items = ret.Items.map(item => {
+    let items = [];
+    ret.Items.forEach(item => {
       const product = new ProductModel(item);
-      return product.toJson();
+      if (storeName === '') {
+        items.push(product.toJson());
+      } else if (storeName === product.Store) {
+        items.push(product.toJson());
+      }
     });
+
     return items;
+  }
+
+  batchDeleteItems = async (appId, productIds) => {
+    console.log('[Controller][Product][batchDeleteItems] Start batch delete items');
+
+    const requestItems = productIds.map(id => ({
+      DeleteRequest: {
+        Key: {
+          ppk: DATA_NAME,
+          psk: `${appId}/${id}`
+        }
+      }
+    }));
+    const params = {
+      RequestItems: {
+        [process.env.TABLE_NAME]: requestItems
+      }
+    };
+
+    const ret = await this.batchWriteItems(params);
+    console.log(ret);
+
+    if (ret.UnprocessedItems && Object.keys(ret.UnprocessedItems).length > 0) {
+      console.error('[Controller][Product][batchDeleteItems] Failed to delete items');
+      throw new Error('Failed to delete items');
+    }
+
+    return ret;
   }
 };

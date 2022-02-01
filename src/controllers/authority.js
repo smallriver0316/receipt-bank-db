@@ -26,9 +26,8 @@ module.exports = class Authority extends DynamoDB {
 
     const ret = await this.get(params);
     if (!ret.Item) {
-      throw new Error(
-        '[Controller][Authority][getItem][Error] Item not found!'
-      );
+      console.error('[Controller][Authority][getItem][Error] Item not found!');
+      throw new Error('Item not found!');
     }
 
     const item = new AuthorityModel(ret.Item);
@@ -88,15 +87,42 @@ module.exports = class Authority extends DynamoDB {
     console.log(ret);
 
     if (!ret.Items || ret.Items.length === 0) {
-      throw new Error(
-        '[Controller][Authority][queryItems][Error] Items not found!'
-      );
+      console.error('[Controller][Authority][queryItems][Error] Items not found!');
+      throw new Error('Items not found!');
     }
 
     const items = ret.Items.map(item => {
-      const product = new AuthorityModel(item);
-      return product.toJson();
+      const authority = new AuthorityModel(item);
+      return authority.toJson();
     });
     return items;
+  }
+
+  batchDeleteItems = async (appId, authorityIds) => {
+    console.log('[Controller][Authority][batchDeleteItems] Start batch delete items');
+
+    const requestItems = authorityIds.map(id => ({
+      DeleteRequest: {
+        Key: {
+          ppk: DATA_NAME,
+          psk: `${appId}/${id}`
+        }
+      }
+    }));
+    const params = {
+      RequestItems: {
+        [process.env.TABLE_NAME]: requestItems
+      }
+    };
+
+    const ret = await this.batchWriteItems(params);
+    console.log(ret);
+
+    if (ret.UnprocessedItems && Object.keys(ret.UnprocessedItems).length > 0) {
+      console.error('[Controller][Authority][batchDeleteItems] Failed to delete items');
+      throw new Error('Failed to delete items');
+    }
+
+    return ret;
   }
 };
